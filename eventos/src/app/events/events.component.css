@@ -1,0 +1,185 @@
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+body {
+  line-height: 1.5;
+  min-height: 100vh;
+  padding: 5rem 0;
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  min-height: 100vh;
+  width: 100%;
+  background-color: #fffbf8;
+  font-family: 'Roboto', sans-serif;
+
+}
+
+section {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+section + section {
+  margin-top: 2.5em;
+}
+h1 {
+  font-weight: 700;
+  line-height: 1.125;
+  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+}
+h2 {
+  margin-top: 0.25em;
+  color: #999;
+  font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+}
+h2 + * {
+  margin-top: 1.5em;
+}
+summary {
+  position: relative;
+  cursor: pointer;
+  padding: 1em 0.5em;
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary:hover {
+  background-color: hwb(180 97% 2%);
+}
+summary div {
+  display: flex;
+  align-items: center;
+
+}
+summary h3 {
+  display: flex;
+  flex-direction: column;
+}
+
+summary small {
+  color: #999;
+  font-size: 0.875em;
+}
+summary strong {
+  font-weight: 700;
+}
+summary span:first-child {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 10px;
+  background-color: #f3e1e1;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.25em;
+}
+summary span:first-child svg {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+summary span:last-child {
+  font-weight: 700;
+  margin-left: auto;
+}
+summary:focus {
+  outline: none;
+}
+summary .plus {
+  color: #289672;
+}
+details {
+  border-bottom: 1px solid #b5bfd9;
+}
+details[open] {
+  box-shadow: -3px 0 0 #b5bfd9;
+}
+details:first-of-type {
+  border-top: 1px solid #b5bfd9;
+}
+details > div {
+  padding: 2em 2em 0;
+  font-size: 0.875em;
+}
+dl {
+  display: flex;
+  flex-wrap: wrap;
+}
+dl dt {
+  font-weight: 700;
+  text-align: left;
+}
+dl dd {
+  text-align: left;
+}
+dl div {
+  margin-right: 4em;
+  margin-bottom: 2em;
+}
+.material-icons {
+  cursor: pointer;
+}
+.navbar-mia {
+  width: 100%;
+  margin: auto;
+  padding: 35px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-height: 0px;
+  background-color: hwb(205 82% 11%);
+
+}
+
+.logo-mia {
+  width: 50px;
+  cursor: pointer;
+  margin-left: 30px;
+}
+
+.navbar-mia ul li {
+  list-style: none;
+  display: inline-block;
+  margin: 0 50px;
+  position: relative;
+}
+
+.navbar-mia ul li a {
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+}
+
+.navbar-mia ul li::before {
+  content: "";
+  height: 3px;
+  width: 0%;
+  background: #0d0401;
+  position: absolute;
+  left: 0;
+  bottom: -12px;
+  transition: 0.4s ease-out;
+}
+
+.navbar-mia ul li:hover::before {
+  width: 100%;
+}
+
+
+.sombra{
+  background-color: #fffbf8;
+
+}
+.recommendation-text {
+  color: #c8b8b8;  /* Gris claro */
+}
+
+.vote-icon {
+  color: black;  /* Si quieres cambiar el color directamente desde aquí, puedes quitar el estilo inline */
+  margin-left: 10px;  /* Margen izquierdo para separar de otros elementos */
+  margin-right: 10px;  /* Margen derecho para dar espacio al siguiente ícono */
+  cursor: pointer;  /* Cambia el cursor a un puntero para indicar que es clickeable */
+}

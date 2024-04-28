@@ -1,0 +1,61 @@
+<html>
+  <body>
+    <div class="background" style="background-image: url(assets/eaters-collective-i_xVfNtQjwI-unsplash.jpg)"></div> 
+       <div class="login">
+      <form [formGroup]="myform" (ngSubmit)="onSubmit()" class="form">
+        <h1>Registro</h1>
+        <br />
+        <br />
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label 
+              >Ingresa tu usuario</mat-label
+            >
+            <input
+              formControlName="email"
+              matInput
+              placeholder="jhondoe123"
+              required
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label
+              >Ingresa tu contraseña</mat-label
+            >
+            <input
+              formControlName="password"
+              matInput
+              [type]="hide ? 'password' : 'text'"
+            />
+
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="hide = !hide"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide"
+            >
+              <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div style="text-align: center">
+       
+          <button
+            class="boton"
+            type="submit"
+          >
+            Registrate
+          </button>
+          <br>
+          <br>
+        </div>
+        <div style="text-align: center">
+          <a href="login">Regresar</a>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
