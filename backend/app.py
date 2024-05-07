@@ -25,7 +25,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
 db.init_app(app)
 
-nuevos = pd.read_csv('/Users/juangarcia/Downloads/nuevos.csv').fillna('N/A')
+nuevos = pd.read_csv('nuevos.csv').fillna('N/A')
 
 def token_required(f):
     @wraps(f)
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     print("INICIE")
     # Asegúrate de que el contexto de la aplicación esté activo
     with app.app_context():
-        df_users = pd.read_csv('/Users/juangarcia/Downloads/recomendaciones.csv').fillna('N/A')
+        df_users = pd.read_csv('recomendaciones.csv').fillna('N/A')
 
         for current_user in df_users.user_id.unique():
         # Crear un nuevo usuario si aún no existe
