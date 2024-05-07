@@ -8,6 +8,7 @@ import jwt
 from functools import wraps
 import json
 from datetime import datetime, timedelta
+import pandas as pd
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -24,6 +25,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
 db.init_app(app)
 
+nuevos = pd.read_csv('/Users/juangarcia/Downloads/nuevos.csv').fillna('N/A')
 
 def token_required(f):
     @wraps(f)
@@ -58,6 +60,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
+    state = db.Column(db.String(100))
     events = db.relationship('Event', backref='user', lazy=True)
 
 
@@ -66,9 +69,8 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     address = db.Column(db.String(100))
-    open_time = db.Column(db.String(100))
-    close_time = db.Column(db.String(100))
     city = db.Column(db.String(100))
+    state = db.Column(db.String(100))
     avg_score = db.Column(db.Float)
     working_hours = db.Column(db.String(100))
     categories = db.Column(db.String(100))
@@ -107,7 +109,8 @@ def register():
     json_data = request.json
     user = User(
         email=json_data['email'],
-        password=bcrypt.generate_password_hash(json_data['password'])
+        password=bcrypt.generate_password_hash(json_data['password']),
+        state=json_data['state']
     )
     try:
         db.session.add(user)
@@ -155,14 +158,17 @@ def get_events(user):
     try:
         eventos = Event.query.filter_by(user_id=user.id).all()
         eventos = events_schema.dump(eventos)  # Obtener la data serializada del evento
-        results = []
+        if len(eventos) == 0:
+             eventos = nuevos[nuevos.state == user.state].to_dict(orient = 'records')
         for evento in eventos:
-            evento['categories'] = json.loads(evento["categories"])
-            evento['working_hours'] = json.loads(evento["working_hours"])
+            if  evento['categories'] != 'N/A':
+                evento['categories'] = json.loads(evento['categories'].replace("'", '"'))
+            if  evento['working_hours'] != 'N/A':
+                evento['working_hours'] = json.loads(evento['working_hours'].replace("'", '"'))
         return eventos
     except Exception as e:
-        print(e)
-        return jsonify({'result': "El usuario no tiene eventos"})
+        status = 'something went wrong'
+        return jsonify({'result': status})
 
 @app.route('/api/events/<id>/', methods=['GET'])
 def get_event(id):
@@ -175,29 +181,42 @@ if __name__ == "__main__":
     print("INICIE")
     # Asegúrate de que el contexto de la aplicación esté activo
     with app.app_context():
+        df_users = pd.read_csv('/Users/juangarcia/Downloads/recomendaciones.csv').fillna('N/A')
+
+        for current_user in df_users.user_id.unique():
         # Crear un nuevo usuario si aún no existe
-        if not User.query.filter_by(email="juan123").first():
-            new_user = User(
-                email="juan123",
-                password=bcrypt.generate_password_hash("admin")
+            if not User.query.filter_by(email=current_user).first():
+                new_user = User(
+                    email=current_user,
+                    password=bcrypt.generate_password_hash("admin")
+                )
+                db.session.add(new_user)
+                db.session.commit()
+            
+            # Buscar el usuario recién creado o existente
+            user = User.query.filter_by(email=current_user).first()
+            user_events = df_users[df_users.user_id == current_user]
+
+           
+
+            for index, event_info in user_events.iterrows():
+                if event_info['categories'] != 'N/A':
+                    categories = json.dumps(json.loads(event_info['categories'].replace("'", '"')))
+             
+            
+                if event_info['hours'] != 'N/A':
+                    hours = json.dumps(json.loads(event_info['hours'].replace("'", '"')))
+        
+
+                new_event = Event(
+                name=event_info['name'],
+                address=event_info['address'],
+                city=event_info['city'],
+                state=event_info['state'],
+                avg_score=event_info['avg_score'],
+                working_hours= hours,
+                categories= categories,
+                user_id=user.id
             )
-            db.session.add(new_user)
+                db.session.add(new_event)
             db.session.commit()
-        
-        # Buscar el usuario recién creado o existente
-        user = User.query.filter_by(email="juan123").first()
-        
-        # Crear un nuevo evento y asociarlo al usuario
-        new_event = Event(
-            name="Festival de Comida Mexicana",
-            address="123 Calle Ficticia",
-            open_time="12:00",
-            close_time="22:00",
-            city="Ciudad Ejemplo",
-            avg_score=4.5,
-            working_hours=json.dumps({"Lunes": "12:00-18:00", "Martes": "13:33-15:33"}),  # Serializar horarios
-            categories=json.dumps(["Mexican", "Burgers", "Gastropubs"]),  # Serializar categorías
-            user_id=user.id
-        )
-        db.session.add(new_event)
-        db.session.commit()

@@ -19,7 +19,7 @@ export class EventsComponent implements OnInit {
     this.getEvents();
   }
 
-  
+
   getControl(index: number, field: string): FormControl {
     return this.controls.at(index).get(field) as FormControl;
   }
@@ -50,19 +50,8 @@ export class EventsComponent implements OnInit {
 
   getEvents(): void {
     this.eventoService.getEvents().subscribe((x) => {
-      this.eventos = x.sort((a, b) => (a.id > b.id) ? -1 : 1);
-      const toGroups = x.map((entity) => {
-        const a = new FormControl();
-        return new FormGroup({
-          name: new FormControl(entity.name, Validators.required),
-          address: new FormControl(entity.address),
-          open_time: new FormControl(entity.open_time),
-          close_time: new FormControl(entity.close_time),
-          city: new FormControl(entity.city),
-          avg_score: new FormControl(entity.avg_score),
-        });
-      });
-      this.controls = new FormArray(toGroups);
+      this.eventos = x;
+      console.log(x)
     });
   }
 

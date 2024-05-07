@@ -5,6 +5,7 @@ export interface Evento {
   open_time: string;
   close_time: string;
   city: string;
+  state: string;
   avg_score: number;
   categories: string[]; // Esto es un arreglo de strings
   working_hours: {[key: string]: string};
