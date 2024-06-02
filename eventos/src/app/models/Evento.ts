@@ -8,5 +8,5 @@ export interface Evento {
   state: string;
   avg_score: number;
   categories: string[]; // Esto es un arreglo de strings
-  working_hours: {[key: string]: string};
+  working_hours:  string;
 }

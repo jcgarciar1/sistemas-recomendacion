@@ -13,33 +13,10 @@ export class RegisterComponent implements OnInit {
   myform!: FormGroup;
   hide = true;
   states = [
-    {value: 'AZ', viewValue: 'Arizona'},
-    {value: 'AB', viewValue: 'Alberta'},
-    {value: 'CA', viewValue: 'California'},
-    {value: 'CO', viewValue: 'Colorado'},
-    {value: 'DE', viewValue: 'Delaware'},
-    {value: 'FL', viewValue: 'Florida'},
-    {value: 'HI', viewValue: 'Hawaii'},
-    {value: 'ID', viewValue: 'Idaho'},
-    {value: 'IL', viewValue: 'Illinois'},
-    {value: 'IN', viewValue: 'Indiana'},
-    {value: 'LA', viewValue: 'Louisiana'},
-    {value: 'MA', viewValue: 'Massachusetts'},
-    {value: 'MI', viewValue: 'Michigan'},
-    {value: 'MO', viewValue: 'Missouri'},
-    {value: 'MT', viewValue: 'Montana'},
-    {value: 'NE', viewValue: 'Nebraska'},
-    {value: 'NV', viewValue: 'Nevada'},
-    {value: 'NJ', viewValue: 'New Jersey'},
-    {value: 'NY', viewValue: 'New York'},
-    {value: 'PA', viewValue: 'Pennsylvania'},
-    {value: 'SD', viewValue: 'South Dakota'},
-    {value: 'TN', viewValue: 'Tennessee'},
-    {value: 'TX', viewValue: 'Texas'},
-    {value: 'UT', viewValue: 'Utah'},
-    {value: 'VT', viewValue: 'Vermont'},
-    {value: 'WA', viewValue: 'Washington'}
-
+    'Adventure', 'Animation', 'Children', 'Comedy', 'Fantasy',
+       'Romance', 'Drama', 'Action', 'Crime', 'Thriller', 'Horror',
+       'Mystery', 'Sci-Fi', 'War', 'Musical', 'Documentary', 'IMAX',
+       'Western', 'Film-Noir'
   ];
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -48,7 +25,9 @@ export class RegisterComponent implements OnInit {
     this.myform = new FormGroup({
       email: new FormControl(''),
       password: new FormControl(''),
-      state: new FormControl(''),
+      genre1: new FormControl(''),
+      genre2: new FormControl(''),
+
 
     });
   }

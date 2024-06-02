@@ -1,6 +1,6 @@
 <html>
   <body>
-    <div class="background" style="background-image: url(assets/eaters-collective-i_xVfNtQjwI-unsplash.jpg)"></div>
+    <div class="background" style="background-image: url(assets/imagen.jpg)"></div>
        <div class="login">
         <form [formGroup]="myform" (ngSubmit)="onSubmit()" class="form">
           <h1>Registro</h1>
@@ -38,10 +38,18 @@
           </div>
           <div>
             <mat-form-field appearance="fill">
-              <mat-label>Selecciona tu estado</mat-label>
-              <mat-select formControlName="state">
-                <mat-option *ngFor="let state of states" [value]="state.value">
-                  {{ state.viewValue }}
+              <mat-label>Selecciona tu género favorito</mat-label>
+              <mat-select formControlName="genre1">
+                <mat-option *ngFor="let state of states" [value]="state">
+                  {{ state }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Selecciona tu segundo género favorito</mat-label>
+              <mat-select formControlName="genre2">
+                <mat-option *ngFor="let state of states" [value]="state">
+                  {{ state }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

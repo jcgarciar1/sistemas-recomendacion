@@ -25,7 +25,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
 db.init_app(app)
 
-nuevos = pd.read_csv('nuevos.csv').fillna('N/A')
+nuevos = pd.read_csv('top_movies_by_genre.csv').fillna('N/A')
 
 def token_required(f):
     @wraps(f)
@@ -60,7 +60,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    state = db.Column(db.String(100))
+    genre1 = db.Column(db.String(100))
+    genre2 = db.Column(db.String(100))
     events = db.relationship('Event', backref='user', lazy=True)
 
 
@@ -110,7 +111,8 @@ def register():
     user = User(
         email=json_data['email'],
         password=bcrypt.generate_password_hash(json_data['password']),
-        state=json_data['state']
+        genre1=json_data['genre1'],
+        genre2=json_data['genre2']
     )
     try:
         db.session.add(user)
@@ -158,17 +160,19 @@ def get_events(user):
     try:
         eventos = Event.query.filter_by(user_id=user.id).all()
         eventos = events_schema.dump(eventos)  # Obtener la data serializada del evento
+        fallback = False
         if len(eventos) == 0:
-             eventos = nuevos[nuevos.state == user.state].to_dict(orient = 'records')
+             eventos = nuevos[(nuevos.categories == user.genre1) | (nuevos.categories == user.genre2)]
+             eventos.categories = eventos.categories.apply(lambda x:[x])
+             eventos = eventos.to_dict(orient = 'records')
+             fallback = True
         for evento in eventos:
-            if  evento['categories'] != 'N/A':
+            if  evento['categories'] != 'N/A' and not fallback:
                 evento['categories'] = json.loads(evento['categories'].replace("'", '"'))
-            if  evento['working_hours'] != 'N/A':
-                evento['working_hours'] = json.loads(evento['working_hours'].replace("'", '"'))
         return eventos
     except Exception as e:
         status = 'something went wrong'
-        return jsonify({'result': status})
+        return jsonify({'result': e})
 
 @app.route('/api/events/<id>/', methods=['GET'])
 def get_event(id):
@@ -176,12 +180,38 @@ def get_event(id):
     return event_schema.dump(eventos)
 
 
-
 if __name__ == "__main__":
     print("INICIE")
     # Asegúrate de que el contexto de la aplicación esté activo
     with app.app_context():
+            if not User.query.filter_by(email="aa").first():
+                new_user = User(
+                    email="aa",
+                    password=bcrypt.generate_password_hash("admin")
+                )
+                db.session.add(new_user)
+                db.session.commit()
+            
+            # Buscar el usuario recién creado o existente
+            user = User.query.filter_by(email="aa").first()
+            new_event = Event(
+            name="Toy Story",
+            city="1999",
+            avg_score=4.8,
+            working_hours= "Pelicula de juguetes que buscan lo mejor para Andy",
+            categories= "['infantil','animada']",
+            user_id=user.id
+        )
+            db.session.add(new_event)
+            db.session.commit()
+
+if __name__ == "__main22__":
+    print("INICIE")
+    # Asegúrate de que el contexto de la aplicación esté activo
+    with app.app_context():
         df_users = pd.read_csv('recomendaciones.csv').fillna('N/A')
+
+
 
         for current_user in df_users.user_id.unique():
         # Crear un nuevo usuario si aún no existe
